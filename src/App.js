@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {AppContainer, Avatar, Details, Image, List, Mail, Name, Search, UserContainer} from "./App.styles";
+import {logDOM} from "@testing-library/react";
 
 const App = () => {
     const [data, setData] = useState(false);
@@ -42,19 +43,25 @@ const App = () => {
     const handleCheck = (ID) => {
         const Users = [...users];
         Users[Users.findIndex(i => i.id === ID)].checked = !Users[Users.findIndex(i => i.id === ID)].checked;
-        setUsers(Users);
-        console.log(users.filter(el => el.checked === true))
+        setUsers(Users)
     }
-    const [name,setName] =useState("");
-    const handleSearch = (e)=>{
+    const [name, setName] = useState("");
+    const handleSearch = (e) => {
         setName(e.target.value)
-        const Users = [...users];
-
+        let Users = [...users];
+        Users = Users.filter(el => {
+            if (el.first_name.toLowerCase().includes(name.toLowerCase()) || el.last_name.toLowerCase().includes(name.toLowerCase())) {
+                return (
+                    el
+                )
+            }
+        })
+        setUsers(Users);
     }
     return (
         <AppContainer>
             <h1>React Challenge</h1>
-            <Search type="text" value={name} onChange={(e)=>handleSearch(e)}/>
+            <Search type="text" value={name} onChange={(e) => handleSearch(e)}/>
             {data ?
                 <List>
                     {users.map(el => {
@@ -83,7 +90,7 @@ const App = () => {
                     })}
                 </List>
                 :
-                <h1>Laduje dane</h1>
+                <h1>Ładuje dane</h1>
             }
         </AppContainer>
     )
